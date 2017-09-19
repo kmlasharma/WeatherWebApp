@@ -1,0 +1,18 @@
+<div>
+  <h3>{{title}}</h3>
+  <div>
+    <input #box (keyup.enter)="queryWeather(box.value)" [(ngModel)]="cityName">
+
+  <button (click)="queryWeather()">Go</button>
+  </div>
+  <strong>{{cityName}}</strong>
+        <h4 *ngIf="errMsg">{{errMsg}} </h4>
+        <h3 >Weather statistics for <strong >{{cityName}}</strong></h3>
+        <h4 *ngIf="country">Country: {{country}} </h4>
+        <p *ngIf="weatherDescription">Weather Description: {{weatherDescription}}.</p>
+        <p *ngIf="temperatureCelcius">Weather Temperature: {{temperatureCelcius}} degrees celcius.</p>
+        <p *ngIf="cloudiness">Cloudiness %: {{cloudiness}}%.</p>
+        <p *ngIf="humidity">Humidity %: {{humidity}}%.</p>
+        <p *ngIf="windSpeedPerKm">Wind Speed: {{windSpeedPerKm}} km/hour, which is classified as {{windClassification}}</p>
+  
+</div>

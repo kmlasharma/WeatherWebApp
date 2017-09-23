@@ -10,6 +10,10 @@ var platform_browser_1 = require("@angular/platform-browser");
 var forms_1 = require("@angular/forms");
 var http_1 = require("@angular/http");
 var app_component_1 = require("./app.component");
+var weather_component_1 = require("./weather.component");
+var graphs_component_1 = require("./graphs.component");
+var core_2 = require("@agm/core");
+var ng2_charts_1 = require("ng2-charts/ng2-charts");
 var AppModule = (function () {
     function AppModule() {
     }
@@ -17,8 +21,10 @@ var AppModule = (function () {
 }());
 AppModule = __decorate([
     core_1.NgModule({
-        imports: [platform_browser_1.BrowserModule, forms_1.FormsModule, http_1.HttpModule],
-        declarations: [app_component_1.AppComponent],
+        imports: [platform_browser_1.BrowserModule, forms_1.FormsModule, http_1.HttpModule, ng2_charts_1.ChartsModule, core_2.AgmCoreModule.forRoot({
+                apiKey: 'AIzaSyDRaIRPZpg5nS5wSQec2z20i3lvJjcHqA8'
+            })],
+        declarations: [app_component_1.AppComponent, weather_component_1.WeatherComponent, graphs_component_1.GraphsComponent],
         bootstrap: [app_component_1.AppComponent],
     })
 ], AppModule);

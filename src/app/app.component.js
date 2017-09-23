@@ -14,40 +14,49 @@ require("rxjs/add/operator/catch");
 require("rxjs/add/operator/do");
 require("rxjs/add/operator/map");
 require("rxjs/add/observable/throw");
+var weather_component_1 = require("./weather.component");
 var AppComponent = (function () {
     function AppComponent(http) {
         this.http = http;
         this.title = "Enter city name:";
         this.geoLocationURL = "https://maps.googleapis.com/maps/api/geocode/json?latlng=";
         this.geoLocationSuffixURL = "&key=AIzaSyC5LHTNfPj5lPuWYiM7ZYamWS4kYsOqJL0";
-        this.prefixUrl = "http://api.openweathermap.org/data/2.5/weather?q=";
         this.apiKeyUrl = "&APPID=db42065604a53ad9c55ba0fb3724bd69";
+        this.forecastPrefixURL = "http://api.openweathermap.org/data/2.5/forecast?q=";
     }
     AppComponent.prototype.queryWeather = function () {
         var _this = this;
-        if (this.cityName) {
-            var url = (this.prefixUrl + "" + this.cityName + this.apiKeyUrl);
-            console.log(url);
-            return this.http.get(url)
-                .subscribe(function (res) { return _this.processWeatherJSON(res, res.json()); });
-        }
+        this.weatherForecastComponents = [];
+        var url = (this.forecastPrefixURL + "" + this.cityName + this.apiKeyUrl);
+        console.log(url);
+        return this.http.get(url)
+            .subscribe(function (res) { return _this.processWeeklyForecast(res.json()); });
     };
     AppComponent.prototype.processWeatherJSON = function (response, result) {
         var responseData = result;
-        console.log(response.status);
         if (response.status == 404) {
             this.errMsg = "Invalid city name.";
             console.log(this.errMsg);
         }
-        this.weatherDescription = responseData.weather[0].description;
-        this.temperatureCelcius = Math.floor(responseData.main.temp - 273.13);
-        this.windSpeedPerKm = Math.floor(responseData.wind.speed * 3.6);
-        this.humidity = responseData.main.humidity;
-        this.cloudiness = responseData.clouds.all;
-        this.windClassification = this.classifyWinds();
-        var longitude = responseData.coord.lon;
-        var latitude = responseData.coord.lat;
-        this.queryLocation(longitude, latitude);
+    };
+    AppComponent.prototype.processWeeklyForecast = function (result) {
+        var responseData = result;
+        this.longitude = responseData.city.coord.lon;
+        this.latitude = responseData.city.coord.lat;
+        this.queryLocation(this.longitude, this.latitude);
+        var weatherForecastArrayJSON = responseData.list;
+        for (var _i = 0, weatherForecastArrayJSON_1 = weatherForecastArrayJSON; _i < weatherForecastArrayJSON_1.length; _i++) {
+            var forecast = weatherForecastArrayJSON_1[_i];
+            var date = new Date(forecast.dt * 1000);
+            var desc = forecast.weather[0].description;
+            var temperatureCelcius = Math.floor(forecast.main.temp - 273.13);
+            var cloudiness = forecast.clouds.all;
+            var windSpeedPerKm = Math.floor(forecast.wind.speed * 3.6);
+            var humidity = forecast.main.humidity;
+            var windClassification = this.classifyWinds(windSpeedPerKm);
+            var wc = new weather_component_1.WeatherComponent(date, desc, temperatureCelcius, cloudiness, windSpeedPerKm, humidity, windClassification);
+            this.weatherForecastComponents.push(wc);
+        }
     };
     AppComponent.prototype.queryLocation = function (longitude, latitude) {
         var _this = this;
@@ -61,9 +70,6 @@ var AppComponent = (function () {
         this.country = responseData.results[0].address_components[responseData.results[0].address_components.length - 1].long_name;
         var regexNum = /\d/g;
         this.fmtCountry(1, responseData);
-        // if(regexNum.test(this.country)) {
-        //   this.country = responseData.results[0].address_components[responseData.results[0].address_components.length - 2].long_name;
-        // }
     };
     AppComponent.prototype.fmtCountry = function (index, res) {
         this.country = res.results[0].address_components[res.results[0].address_components.length - index].long_name;
@@ -73,20 +79,20 @@ var AppComponent = (function () {
         }
         return;
     };
-    AppComponent.prototype.classifyWinds = function () {
-        if (this.windSpeedPerKm <= 11) {
+    AppComponent.prototype.classifyWinds = function (windSpeedPerKm) {
+        if (windSpeedPerKm <= 11) {
             return "Calm/Light Breeze";
         }
-        else if (this.windSpeedPerKm > 11 && this.windSpeedPerKm <= 28) {
+        else if (windSpeedPerKm > 11 && windSpeedPerKm <= 28) {
             return "Moderate/Gentle Breeze";
         }
-        else if (this.windSpeedPerKm > 28 && this.windSpeedPerKm <= 49) {
+        else if (windSpeedPerKm > 28 && windSpeedPerKm <= 49) {
             return "Fresh/Strong Gale";
         }
-        else if (this.windSpeedPerKm > 49 && this.windSpeedPerKm <= 88) {
+        else if (windSpeedPerKm > 49 && windSpeedPerKm <= 88) {
             return "Strong wind/Gale";
         }
-        else if (this.windSpeedPerKm > 88 && this.windSpeedPerKm < 117) {
+        else if (windSpeedPerKm > 88 && windSpeedPerKm < 117) {
             return "Whole gale";
         }
         else {
@@ -98,9 +104,12 @@ var AppComponent = (function () {
 AppComponent = __decorate([
     core_1.Component({
         selector: 'my-app',
+        styles: ["\n    agm-map {\n      height: 300px;\n      width: 500px;\n    }\n  "],
         templateUrl: 'app/app.component.html',
     }),
-    core_1.Pipe({ name: 'round' }),
+    core_1.Pipe({
+        name: 'round'
+    }),
     __metadata("design:paramtypes", [http_1.Http])
 ], AppComponent);
 exports.AppComponent = AppComponent;

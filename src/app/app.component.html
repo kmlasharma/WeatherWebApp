@@ -1,18 +1,38 @@
-<div>
+<nav class="navbar navbar-default">
+ <div class="container">
   <h3>{{title}}</h3>
-  <div>
-    <input #box (keyup.enter)="queryWeather(box.value)" [(ngModel)]="cityName">
-
-  <button (click)="queryWeather()">Go</button>
-  </div>
-  <strong>{{cityName}}</strong>
-        <h4 *ngIf="errMsg">{{errMsg}} </h4>
-        <h3 >Weather statistics for <strong >{{cityName}}</strong></h3>
-        <h4 *ngIf="country">Country: {{country}} </h4>
-        <p *ngIf="weatherDescription">Weather Description: {{weatherDescription}}.</p>
-        <p *ngIf="temperatureCelcius">Weather Temperature: {{temperatureCelcius}} degrees celcius.</p>
-        <p *ngIf="cloudiness">Cloudiness %: {{cloudiness}}%.</p>
-        <p *ngIf="humidity">Humidity %: {{humidity}}%.</p>
-        <p *ngIf="windSpeedPerKm">Wind Speed: {{windSpeedPerKm}} km/hour, which is classified as {{windClassification}}</p>
   
-</div>
+<div class="col-xs-3">
+    <input type="text" class="form-control"  #box (keyup.enter)="queryWeather(box.value)" [(ngModel)]="cityName">
+ </div>
+  <button type="button" class="btn btn-success" (click)="queryWeather()">Go</button>
+
+  <h4 *ngIf="errMsg">{{errMsg}} </h4>
+  
+  <h3 >Weather statistics for <strong >{{cityName}}</strong></h3>
+  </div>
+</nav>
+
+
+<div class="container">
+
+  <h4 *ngIf="country">Country: {{country}} </h4>
+  
+  <div class="container" *ngIf= "latitude">
+  <agm-map [latitude]="latitude" [longitude]="longitude"></agm-map>
+  </div>
+  <graphs></graphs>
+  <section *ngFor="let weather of weatherForecastComponents" >
+      {{ weather.date | date:'yMMMMEEEEd'}}
+      {{ weather.date | date:'jm'}}
+  <ul >
+    <li>Description: {{ weather.weatherDescription}}</li>
+    <li>Temperature: {{ weather.temperatureCelcius}} degrees</li>
+    <li>Cloudiness %: {{ weather.cloudiness}}</li>
+    <li>Humidity %: {{ weather.humidity}}</li>
+    <li>Wind Speed: {{ weather.windSpeedPerKm}}km/hour, which is classified as {{weather.windClassification}}</li>
+  </ul>
+</section>
+ 
+ </div>
+

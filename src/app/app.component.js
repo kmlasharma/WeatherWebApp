@@ -32,13 +32,6 @@ var AppComponent = (function () {
         return this.http.get(url)
             .subscribe(function (res) { return _this.processWeeklyForecast(res.json()); });
     };
-    AppComponent.prototype.processWeatherJSON = function (response, result) {
-        var responseData = result;
-        if (response.status == 404) {
-            this.errMsg = "Invalid city name.";
-            console.log(this.errMsg);
-        }
-    };
     AppComponent.prototype.processWeeklyForecast = function (result) {
         var responseData = result;
         this.longitude = responseData.city.coord.lon;
@@ -57,6 +50,16 @@ var AppComponent = (function () {
             var wc = new weather_component_1.WeatherComponent(date, desc, temperatureCelcius, cloudiness, windSpeedPerKm, humidity, windClassification);
             this.weatherForecastComponents.push(wc);
         }
+        this.startGraphing();
+    };
+    AppComponent.prototype.startGraphing = function () {
+        this.options = {
+            title: { text: 'simple chart' },
+            series: [{
+                    data: [29.9, 71.5, 106.4, 129.2],
+                }]
+        };
+        console.log(this.options);
     };
     AppComponent.prototype.queryLocation = function (longitude, latitude) {
         var _this = this;

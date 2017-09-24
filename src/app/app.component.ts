@@ -14,6 +14,8 @@ import {
     WeatherComponent
 } from './weather.component';
 import { AgmCoreModule } from '@agm/core';
+import { GraphsComponent } from './graphs.component';
+import { ChartModule }            from 'angular2-highcharts'; 
 
 
 @Component({
@@ -44,7 +46,7 @@ export class AppComponent {
     forecastPrefixURL: String = "http://api.openweathermap.org/data/2.5/forecast?q=";
     latitude: number;
     longitude: number;
-
+    options: Object;
 
     constructor(private http: Http) {}
 
@@ -57,16 +59,6 @@ export class AppComponent {
             .subscribe(res => this.processWeeklyForecast(res.json()));
     }
 
-
-
-
-    processWeatherJSON(response: any, result: any) {
-        let responseData = result;
-        if (response.status == 404) {
-            this.errMsg = "Invalid city name."
-            console.log(this.errMsg);
-        }   
-    }
 
     processWeeklyForecast(result: any) {
         let responseData = result;
@@ -87,10 +79,20 @@ export class AppComponent {
             let wc = new WeatherComponent(date, desc, temperatureCelcius, cloudiness, windSpeedPerKm, humidity, windClassification);
             this.weatherForecastComponents.push(wc);
         }
+        this.startGraphing();
 
     }
 
 
+    startGraphing() {
+        this.options = {
+            title : { text : 'simple chart' },
+            series: [{
+                data: [29.9, 71.5, 106.4, 129.2],
+            }]
+        };
+        console.log(this.options)
+    }
 
     queryLocation(longitude: number, latitude: number) {
         let url = this.geoLocationURL + "" + latitude + "," + longitude + this.geoLocationSuffixURL;

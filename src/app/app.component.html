@@ -21,7 +21,6 @@
   <div class="container" *ngIf= "latitude">
   <agm-map [latitude]="latitude" [longitude]="longitude"></agm-map>
   </div>
-  <graphs></graphs>
   <section *ngFor="let weather of weatherForecastComponents" >
       {{ weather.date | date:'yMMMMEEEEd'}}
       {{ weather.date | date:'jm'}}

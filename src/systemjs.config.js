@@ -7,7 +7,7 @@
     paths: {
       // paths serve as alias
       'npm:': 'node_modules/'
-    },
+          },
     // map tells the System loader where to look for things
     map: {
       // our app is within the app folder
@@ -23,10 +23,14 @@
       '@angular/router': 'npm:@angular/router/bundles/router.umd.js',
       '@angular/forms': 'npm:@angular/forms/bundles/forms.umd.js',
       '@agm/core': 'node_modules/@agm/core/core.umd.js',
-
+      'angular2-highcharts': 'node_modules/angular2-highcharts',
+      'highcharts': 'node_modules/highcharts',
+      // "ng2-charts/ng2-charts": "node_modules/ng2-charts/ng2-charts",
+      // "chart.js": "npm:chart.js/dist/Chart.min.js",
       // other libraries
       'rxjs':                      'npm:rxjs',
       'angular-in-memory-web-api': 'npm:angular-in-memory-web-api/bundles/in-memory-web-api.umd.js'
+      // 'ng2-charts': 'npm:ng2-charts'
     },
     // packages tells the System loader how to load when no filename and/or no extension
     packages: {
@@ -38,6 +42,21 @@
           }
         }
       },
+      highcharts: {
+        main: './highcharts.js',
+        defaultExtension: 'js'
+      },
+      'angular2-highcharts': {
+        main: './index.js',
+        defaultExtension: 'js'
+      },
+      // 'ng2-charts': {
+      //   defaultExtension: 'js'
+      // },
+      // "chart.js":{
+      //   defaultExtension: 'js' ,
+      // },
+
       rxjs: {
         defaultExtension: 'js'
       }
